@@ -4,24 +4,23 @@
     <link rel="icon" href="favicon.ico" />
     <link href="style.css" rel="stylesheet" type="text/css">
     <script src="FileSaver.min.js"></script>
+    <script src="data.js"></script>
     <script src="app.js"></script>
     <title>MLP:CCG Deck Creator</title>
   </head>
   <body>
     <div class="flex-container" id="main_flex">
-      <div class="logo">Tabletop Simulator MLP:CCG<br>Deck Creator<sup style="font-size:small">alpha</sup></div>
+      <div class="logo">Tabletop Simulator MLP:CCG<br>Deck Creator</div>
       <input id="deck_name" class="url-input" type="text" placeholder="Deck Name">
       <input id="cardback_url" class="url-input" type="text" placeholder="Cardback URL">
       <input id="ponyhead_url" class="url-input" type="text" placeholder="Ponyhead Deck URL">
       <input id="submit_button" class="submit" type="submit" onclick="submit()"  value="Create">
-      <div id="progress_text" style="visibility:hidden">...</div>
-      <progress id="generate_progress" style="visibility:hidden" max="100" value="0"></progress>
       <div class="info-box">
         <ul>
           <li>Cardback URL is optional. If it is omitted, the <a href="http://i.imgur.com/pAxOuds.jpg">default cardback</a> will be used instead</li>
-          <li>Ponyhead URL <b>must</b> be a full URL to the deck. Shortened URLs are not supported and will yield INVALID_PONYHEAD_URL</li>
-          <li>The .json file should be put in <i>C:\Users\YourUser\Documents\My Games\Tabletop Simulator\Saves\Chest</i>
+          <li>The .json file should be put in <i>C:\Users\YourUser\Documents\My Games\Tabletop Simulator\Saves\Saved Objects</i>
           <li>Special thanks to DTAmnesiac for testing!</li>
+          <li>Special thanks to DoubleRainaxe for providing TTS cardsheets and parsable data to work with them!</li>
         </ul>
       </div>
       <div class="footer">Copyright &copy; 2017, <a href="http://hithroc.org">Hithroc Mehatoko</a>. Images are taken from <a href="http://ponyhead.com">Ponyhead</a>. If you have any issues or suggestions, feel free to contact me via <a href="mailto:contact@hithroc.org">e-mail</a> or Discord: Hithroc#7469</div>
