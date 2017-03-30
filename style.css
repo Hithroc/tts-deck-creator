@@ -1,0 +1,97 @@
+body {
+  font-family: sans-serif;
+}
+
+a {
+  color: #38A32C;
+}
+
+a:hover {
+  color: #5cb752;
+}
+
+a:visited {
+  color: #38A32C;
+}
+
+.flex-container {
+  display: flex;
+  width:60em;
+  margin:auto;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  height: 100%;
+}
+
+.form-wrap {
+}
+
+.logo {
+  font-size: 3.5em;
+  color: #38A32C;
+  text-align: center;
+  padding: 1em;
+}
+
+.url-input {
+  margin: 0.2em;
+  width: 20em;
+  border: solid 1px #dcdcdc;
+  padding: 0.5em;
+  border-radius: 1em;
+  font-size: 1.5em;
+  transition: box-shadow 0.3s, border 0.3s;
+  outline: none;
+  text-align:center;
+}
+
+.url-input:focus {
+  margin: 0.2em;
+  border: solid 1px #707070;
+  border-radius: 1em;
+  box-shadow: 0 0 5px 1px #38A32C;
+}
+
+.submit {
+  margin: 0.1em;
+  border-radius: 1em;
+  padding: 0.5em;
+  font-size: 1.5em;
+  border: none;
+  background: #38A32C;
+  color: white;
+  outline: none;
+}
+
+.submit:active {
+  background: #5cb752;
+}
+
+.submit:disabled {
+  background: #AAAAAA;
+}
+
+#progress_text {
+  margin-top: 1em;
+  font-size:0.8em;
+}
+
+#generate_progress {
+  width:15em;
+}
+
+.info-box {
+  font-size:0.8em;
+  flex: 1 0 auto;
+}
+
+.footer {
+  padding: 1em;
+  width: 100%;
+  height: 2em;
+  font-size:0.6em;
+  line-height: 2em;
+  text-align: center;
+  vertical-align: middle;
+}
