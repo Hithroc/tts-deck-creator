@@ -107,18 +107,27 @@ function ponyHeadToCards(ponyhead_url)
       cards.push({"id":cid, "amount": m[3]});
     }
   } while(m);
+  if(cards.length === 0)
+    throw "Wrong PonyHead URL!";
   return cards;
 }
 
 function submit()
 {
-  var deck_name    = document.getElementById("deck_name").value;
-  var cardback_url = document.getElementById("cardback_url").value;
-  var ponyhead_url = document.getElementById("ponyhead_url").value;
-  if(cardback_url === "")
-    cardback_url = "http://i.imgur.com/pAxOuds.jpg";
-  var cards = ponyHeadToCards(ponyhead_url);
-  var tts = generateTTS(cards, cardback_url);
-  var blob = new Blob([JSON.stringify(tts, null, 2)], {type: "text/plain;charset=utf-8"});
-  saveAs(blob, deck_name + ".json");
+  try
+  {
+    var deck_name    = document.getElementById("deck_name").value;
+    var cardback_url = document.getElementById("cardback_url").value;
+    var ponyhead_url = document.getElementById("ponyhead_url").value;
+    if(cardback_url === "")
+      cardback_url = "http://i.imgur.com/pAxOuds.jpg";
+    var cards = ponyHeadToCards(ponyhead_url);
+    var tts = generateTTS(cards, cardback_url);
+    var blob = new Blob([JSON.stringify(tts, null, 2)], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, deck_name + ".json");
+  }
+  catch(e)
+  {
+    alert(e);
+  }
 }
