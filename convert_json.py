@@ -33,7 +33,6 @@ def search_db(cardset, num, db):
             return card
     return None
 
-print(mappings)
 for pid,cardmap in enumerate(mappings):
     pid = str(pid)
     urls[pid] = cardmap["urls"]
