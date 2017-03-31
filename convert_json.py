@@ -34,7 +34,7 @@ def search_db(cardset, num, db):
     return None
 
 for pid,cardmap in enumerate(mappings):
-    pid = str(pid)
+    pid = str(pid+1)
     urls[pid] = cardmap["urls"]
     for (ix, card) in enumerate(cardmap["cards"]):
         expansion = None
