@@ -1,4 +1,3 @@
-
 function idToDeckObj(pic_id, cardback)
 {
   back = cardback;
@@ -8,12 +7,12 @@ function idToDeckObj(pic_id, cardback)
     back = db["urls"][pic_id]["back"];
     unique = true;
   }
-  return { "FaceURL": db["urls"][pic_id]["front"], "BackURL": back, "BackIsHidden": true, "UniqueBack": unique, "NumWidth": 10, "NumHeight": 7 }
+  return { "FaceURL": db["urls"][pic_id]["front"], "BackURL": back, "BackIsHidden": true, "UniqueBack": unique, "NumWidth": 10, "NumHeight": 7 };
 }
 
 function generateStates(cards, cardback, predicate, sideways, transform)
 {
-  var obj_state = 
+  var obj_state =
   { "ColorDiffuse": {"r": 0.713235259,"g": 0.713235259, "b": 0.713235259}
   , "ContainedObjects": []
   , "Grid": true
@@ -29,7 +28,6 @@ function generateStates(cards, cardback, predicate, sideways, transform)
   };
 
   var current_id = 100;
-  console.log("hello");
   for(cardix in cards)
   {
     card = cards[cardix];
@@ -39,7 +37,7 @@ function generateStates(cards, cardback, predicate, sideways, transform)
       if(!predicate(card_info))
         continue;
       if(obj_state["CustomDeck"].hasOwnProperty(card_info["pic_id"]))
-        var deck_obj = obj_state["CustomDeck"][card_info["pic_id"]]
+        var deck_obj = obj_state["CustomDeck"][card_info["pic_id"]];
       else
       {
         var deck_obj = idToDeckObj(card_info["pic_id"], cardback);
@@ -47,8 +45,8 @@ function generateStates(cards, cardback, predicate, sideways, transform)
       }
       card_id = parseInt(card_info["pic_id"] + ("0" + card_info["index"].toString()).slice(-2));
       obj_state["DeckIDs"].push(card_id);
-      deck_obj_ = {}
-      deck_obj_[card_info["pic_id"]] = deck_obj
+      deck_obj_ = {};
+      deck_obj_[card_info["pic_id"]] = deck_obj;
       var card_obj =
       { "CardID": card_id
       , "Name": "Card"
@@ -69,7 +67,7 @@ function generateStates(cards, cardback, predicate, sideways, transform)
 function generateTTS(cards, cardback)
 {
   // I know that it's not very effective to pass the decklist 3 times for
-  // 3 decks. I will rewrite it someday. 
+  // 3 decks. I will rewrite it someday, probably never.
   var transform_all  = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 3.5, "scaleZ": 1.0, "posX": 2.5, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
   var transform_prob = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 0.0, "scaleZ": 1.0, "posX": 2.5, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
   var transform_mane = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 0.0, "scaleZ": 1.0, "posX": 0.0, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
@@ -118,6 +116,7 @@ function submit()
   {
     var deck_name    = document.getElementById("deck_name").value;
     var cardback_url = document.getElementById("cardback_url").value;
+    document.cookie = "cardback_url=" + cardback_url;
     var ponyhead_url = document.getElementById("ponyhead_url").value;
     if(cardback_url === "")
       cardback_url = "http://i.imgur.com/pAxOuds.jpg";
@@ -131,3 +130,9 @@ function submit()
     alert(e);
   }
 }
+
+function init()
+{
+  document.getElementById("cardback_url").value = document.cookie.replace(/(?:(?:^|.*;\s*)cardback_url\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+}
+document.addEventListener("DOMContentLoaded", init, false);
