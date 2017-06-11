@@ -60,4 +60,4 @@ for pid,cardmap in enumerate(mappings):
         cardobj["type"] = db_card["type"]
         output["cards"][card] = cardobj
 output["urls"] = urls
-print(json.dumps(output))
+print("db = " + json.dumps(output) + ";")
