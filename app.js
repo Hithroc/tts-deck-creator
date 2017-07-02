@@ -116,7 +116,12 @@ function submit()
   {
     var deck_name    = document.getElementById("deck_name").value;
     var cardback_url = document.getElementById("cardback_url").value;
-    document.cookie = "cardback_url=" + cardback_url;
+
+    var date = new Date();
+    var time = date.getTime();
+    time += 365 * 24 * 60 * 60 * 1000;
+    date.setTime(time)
+    document.cookie = "cardback_url=" + btoa(cardback_url) + "; expires=" + date.toUTCString() + "; path=/;";
     var ponyhead_url = document.getElementById("ponyhead_url").value;
     if(cardback_url === "")
       cardback_url = "http://cloud-3.steamusercontent.com/ugc/252591719340213373/873428FF40D27FA11227445CC59BF39144E391FA/";
@@ -133,6 +138,6 @@ function submit()
 
 function init()
 {
-  document.getElementById("cardback_url").value = document.cookie.replace(/(?:(?:^|.*;\s*)cardback_url\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+  document.getElementById("cardback_url").value = atob(document.cookie.replace(/(?:(?:^|.*;\s*)cardback_url\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
 }
 document.addEventListener("DOMContentLoaded", init, false);
