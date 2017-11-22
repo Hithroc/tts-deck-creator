@@ -15,6 +15,7 @@ expansions = {
 , "st": "ST"
 , "gf": "GF"
 , "de": "DE"
+, "sq": "SQ"
 }
 
 mappings = json.loads(open(sys.argv[1]).read())
