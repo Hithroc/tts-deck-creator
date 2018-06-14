@@ -128,6 +128,8 @@ function submit()
     var cards = ponyHeadToCards(ponyhead_url);
     var tts = generateTTS(cards, cardback_url);
     var blob = new Blob([JSON.stringify(tts, null, 2)], {type: "text/plain;charset=utf-8"});
+    if(deck_name === "")
+      deck_name = "New Deck"
     saveAs(blob, deck_name + ".json");
   }
   catch(e)
