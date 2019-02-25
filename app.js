@@ -58,7 +58,7 @@ function generateStates(cards, cardback, sideways, transform)
   return obj_state;
 }
 
-function generateTTS(cards, cardback)
+function generateTTS(cards, cardback, probback)
 {
   var transform_draw = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 3.5, "scaleZ": 1.0, "posX": 2.5, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
   var transform_prob = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 0.0, "scaleZ": 1.0, "posX": 2.5, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
@@ -67,7 +67,7 @@ function generateTTS(cards, cardback)
   function isProblem(c) { return c["data"]["type"] == "Problem"; };
   function otherwise(c) { return !(isMane(c) || isProblem(c)); };
   var manes = generateStates(cards.filter(isMane), cardback, false, transform_mane);
-  var problems = generateStates(cards.filter(isProblem), cardback, true, transform_prob);
+  var problems = generateStates(cards.filter(isProblem), probback, true, transform_prob);
   var drawdeck = generateStates(cards.filter(otherwise), cardback, false, transform_draw);
   var tts =
   { "Date": ""
@@ -107,17 +107,22 @@ function submit()
   {
     var deck_name = document.getElementById("deck_name").value;
     var cardback_url = document.getElementById("cardback_url").value;
+    var probback_url = document.getElementById("probback_url").value;
+    var ponyhead_url = document.getElementById("ponyhead_url").value;
 
     var date = new Date();
     var time = date.getTime();
     time += 365 * 24 * 60 * 60 * 1000;
     date.setTime(time)
     document.cookie = "cardback_url=" + btoa(cardback_url) + "; expires=" + date.toUTCString() + "; path=/;";
-    var ponyhead_url = document.getElementById("ponyhead_url").value;
+    document.cookie = "probback_url=" + btoa(probback_url) + "; expires=" + date.toUTCString() + "; path=/;";
+
     if(cardback_url === "")
       cardback_url = "http://cloud-3.steamusercontent.com/ugc/252591719340213373/873428FF40D27FA11227445CC59BF39144E391FA/";
+    if(probback_url === "")
+      probback_url = cardback_url;
     var cards = ponyHeadToCards(ponyhead_url);
-    var tts = generateTTS(cards, cardback_url);
+    var tts = generateTTS(cards, cardback_url, probback_url);
     var blob = new Blob([JSON.stringify(tts, null, 2)], {type: "text/plain;charset=utf-8"});
     if(deck_name === "")
       deck_name = "New Deck"
@@ -132,5 +137,6 @@ function submit()
 function init()
 {
   document.getElementById("cardback_url").value = atob(document.cookie.replace(/(?:(?:^|.*;\s*)cardback_url\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+  document.getElementById("probback_url").value = atob(document.cookie.replace(/(?:(?:^|.*;\s*)probback_url\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
 }
 document.addEventListener("DOMContentLoaded", init, false);
