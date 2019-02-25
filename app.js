@@ -10,7 +10,7 @@ function idToDeckObj(pic_id, cardback)
   return { "FaceURL": db["urls"][pic_id]["front"], "BackURL": back, "BackIsHidden": true, "UniqueBack": unique, "NumWidth": 10, "NumHeight": 7 };
 }
 
-function generateStates(cards, cardback, predicate, sideways, transform)
+function generateStates(cards, cardback, sideways, transform)
 {
   var obj_state =
   { "ColorDiffuse": {"r": 0.713235259, "g": 0.713235259, "b": 0.713235259}
@@ -28,9 +28,7 @@ function generateStates(cards, cardback, predicate, sideways, transform)
   };
 
   cards.forEach(function (card) {
-    var card_info = db["cards"][card["id"]];
-    if(!predicate(card_info))
-      return;
+    var card_info = card["data"];
     for(var i = 0; i < card["amount"]; i++)
     {
       if(obj_state["CustomDeck"].hasOwnProperty(card_info["pic_id"]))
@@ -62,17 +60,15 @@ function generateStates(cards, cardback, predicate, sideways, transform)
 
 function generateTTS(cards, cardback)
 {
-  // I know that it's not very effective to pass the decklist 3 times for
-  // 3 decks. I will rewrite it someday, probably never.
   var transform_draw = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 3.5, "scaleZ": 1.0, "posX": 2.5, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
   var transform_prob = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 0.0, "scaleZ": 1.0, "posX": 2.5, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
   var transform_mane = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 0.0, "scaleZ": 1.0, "posX": 0.0, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
-  function isMane(c) { return c["type"] == "Mane"; };
-  function isProblem(c) { return c["type"] == "Problem"; };
+  function isMane(c) { return c["data"]["type"] == "Mane"; };
+  function isProblem(c) { return c["data"]["type"] == "Problem"; };
   function otherwise(c) { return !(isMane(c) || isProblem(c)); };
-  var manes = generateStates(cards, cardback, isMane, false, transform_mane);
-  var problems = generateStates(cards, cardback, isProblem, true, transform_prob);
-  var drawdeck = generateStates(cards, cardback, otherwise, false, transform_draw);
+  var manes = generateStates(cards.filter(isMane), cardback, false, transform_mane);
+  var problems = generateStates(cards.filter(isProblem), cardback, true, transform_prob);
+  var drawdeck = generateStates(cards.filter(otherwise), cardback, false, transform_draw);
   var tts =
   { "Date": ""
   , "GameMode": ""
@@ -97,7 +93,7 @@ function ponyHeadToCards(ponyhead_url)
     if(m)
     {
       var cid = m[1] + m[2];
-      cards.push({"id": cid, "amount": m[3]});
+      cards.push({"data": db["cards"][cid], "amount": m[3]});
     }
   } while(m);
   if(cards.length === 0)
