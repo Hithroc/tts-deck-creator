@@ -60,9 +60,9 @@ function generateStates(cards, cardback, sideways, transform)
 
 function generateTTS(cards, cardback, probback)
 {
-  var transform_draw = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 3.5, "scaleZ": 1.0, "posX": 2.5, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
-  var transform_prob = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 0.0, "scaleZ": 1.0, "posX": 2.5, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
-  var transform_mane = {"rotX": 0, "posY": 1.0, "scaleY": 1.0, "posZ": 0.0, "scaleZ": 1.0, "posX": 0.0, "rotY": 180, "rotZ": 180, "scaleX": 1.0};
+  var transform_draw = {"posX": 3.0, "posY": 1.0, "posZ": 0.0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1.3, "scaleY": 1.0, "scaleZ": 1.3};
+  var transform_prob = {"posX": 1.5, "posY": 1.0, "posZ": 4.0, "rotX": 0, "rotY": 90, "rotZ": 180, "scaleX": 1.3, "scaleY": 1.0, "scaleZ": 1.3};
+  var transform_mane = {"posX": 0.0, "posY": 1.0, "posZ": 0.0, "rotX": 0, "rotY": 180, "rotZ": 0, "scaleX": 1.3, "scaleY": 1.0, "scaleZ": 1.3};
   function isMane(c) { return c["data"]["type"] == "Mane"; };
   function isProblem(c) { return c["data"]["type"] == "Problem"; };
   function otherwise(c) { return !(isMane(c) || isProblem(c)); };
