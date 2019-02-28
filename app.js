@@ -48,7 +48,7 @@ function generateStates(cards, cardback, sideways, transform)
       , "Nickname": card_info["name"]
       , "Transform": transform
       , "CustomDeck": deck_obj_
-      , "SidewaysCard": sideways
+      , "SidewaysCard": card_info["type"] === "Problem"
       };
       obj_state["ContainedObjects"].push(card_obj);
     }
