@@ -83,6 +83,43 @@ function generateTTS(cards, cardback, probback)
   return tts;
 }
 
+function generateOCTGN(cards)
+{
+  var str = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n";
+  str += "<deck game=\"65656467-b709-43b2-a5c6-80c2f216adf9\">\n";
+  var sections = { "Mane": "", "Friend": "", "Resource": "", "Event": "", "Troublemaker": "", "Problem": ""};
+  var encodeXML = function(str)
+  {
+    return str.split("&").join("&amp;")
+         .split("<").join("&lt;")
+         .split(">").join("&gt;")
+         .split("'").join("&apos;")
+         .split("\"").join("&quot;");
+  };
+  cards.forEach(function (card) {
+    var card_info = card["data"];
+    var ct = card_info["type"];
+    sections[ct] += "  <card qty=\"" + card["amount"] + "\" id=\"" + card_info["uuid"] + "\">" + encodeXML(card_info["name"]) + "</card>\n";
+  })
+  var printSection = function(name, content)
+  {
+    var sec = ""
+    sec += "<section name=\"" + name + "\" shared=\"False\">\n";
+    sec += content;
+    sec += "</section>\n";
+    return sec;
+  };
+  str += printSection("Mane Character", sections["Mane"]);
+  str += printSection("Friends", sections["Friend"]);
+  str += printSection("Resources", sections["Resource"]);
+  str += printSection("Events", sections["Event"]);
+  str += printSection("Troublemakers", sections["Troublemaker"]);
+  str += printSection("Problems", sections["Problem"]);
+  str += "</deck>\n";
+  console.log(str);
+  return str;
+}
+
 function ponyHeadToCards(ponyhead_url)
 {
   var urlre = /[-=]([a-z][a-z])(\w+)x(\d+)/g;
@@ -101,7 +138,7 @@ function ponyHeadToCards(ponyhead_url)
   return cards;
 }
 
-function submit()
+function submit(tts)
 {
   try
   {
@@ -122,11 +159,24 @@ function submit()
     if(probback_url === "")
       probback_url = cardback_url;
     var cards = ponyHeadToCards(ponyhead_url);
-    var tts = generateTTS(cards, cardback_url, probback_url);
-    var blob = new Blob([JSON.stringify(tts, null, 2)], {type: "text/plain;charset=utf-8"});
+    var res;
+    var blob;
+    var ext = "";
+    if(tts)
+    {
+      res = generateTTS(cards, cardback_url, probback_url);
+      blob = new Blob([JSON.stringify(res, null, 2)], {type: "text/plain;charset=utf-8"});
+      ext = "json";
+    }
+    else
+    {
+      res = generateOCTGN(cards)
+      blob = new Blob([res], {type: "text/plain;charset=utf-8"});
+      ext = "o8d"
+    }
     if(deck_name === "")
       deck_name = "New Deck"
-    saveAs(blob, deck_name + ".json");
+    saveAs(blob, deck_name + "." + ext);
   }
   catch(e)
   {

@@ -10,16 +10,23 @@
   </head>
   <body>
     <div class="flex-container" id="main_flex">
-      <div class="logo">Tabletop Simulator MLP:CCG<br>Deck Creator</div>
+      <div class="logo">MLP:CCG Deck Exporter</div>
       <input id="deck_name" class="url-input" type="text" placeholder="Deck Name">
-      <input id="cardback_url" class="url-input" type="text" placeholder="Cardback URL">
-      <input id="probback_url" class="url-input" type="text" placeholder="Problem back URL">
+      <input id="cardback_url" class="url-input" type="text" placeholder="Cardback URL (TTS only)">
+      <input id="probback_url" class="url-input" type="text" placeholder="Problem back URL (TTS only)">
       <input id="ponyhead_url" class="url-input" type="text" placeholder="Ponyhead Deck URL">
-      <input id="submit_button" class="submit" type="submit" onclick="submit()"  value="Create">
+      <div id="submit_button">
+        <input id="tts_submit_button" class="submit" type="submit" onclick="submit(true)"  value="TTS">
+        <input id="octgn_submit_button" class="submit" type="submit" onclick="submit(false)"  value="OCTGN">
+      </div>
       <div class="info-box">
+        <div>
+          <font size="3">TTS files should go to Documents\My Games\Tabletop Simulator\Saves\Saved Objects</font>
+        </div>
+        <br />
+        Additional information:
         <ul>
           <li>Cardback URLs are optional. If they are omitted, the <a href="http://cloud-3.steamusercontent.com/ugc/252591719340213373/873428FF40D27FA11227445CC59BF39144E391FA/">default cardback</a> will be used instead</li>
-          <li>The .json file should be put in <i>C:\Users\YourUser\Documents\My Games\Tabletop Simulator\Saves\Saved Objects</i>
           <li>Special thanks to DTAmnesiac for testing!</li>
           <li>Special thanks to DoubleRainaxe for providing TTS cardsheets and parsable data to work with them!</li>
           <li>Check out <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=878375913">Steam Workshop mod</a> for MLP:CCG with all the cards, customizable playmats and more!
