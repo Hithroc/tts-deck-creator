@@ -18,6 +18,7 @@ expansions = {
 , "de": "DE"
 , "sb": "SB"
 , "ff": "FF"
+, "ll": "LL"
 }
 
 mappings = json.loads(open(sys.argv[1]).read())
@@ -41,6 +42,8 @@ output["cards"] = {}
 output["urls"] = {}
 
 def search_db(cardset, num, db):
+    if cardset + num == "CG00":
+      num = "0"
     for card in db:
         if card["id"] == cardset + num:
             return card
@@ -66,6 +69,7 @@ for pid,cardmap in enumerate(mappings):
         db_card = search_db(expansions[expansion], card_num, db)
         if db_card is None:
             print("Card " + card + " was not found in the database. Skipping", file=sys.stderr)
+            continue
         cardobj = {}
         cardobj["name"] = db_card["fullname"]
         cardobj["uuid"] = guidify(db_card)
