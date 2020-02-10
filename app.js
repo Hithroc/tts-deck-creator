@@ -120,8 +120,130 @@ function generateOCTGN(cards)
   return str;
 }
 
+function urlToArray64(s)
+{
+  var safeURLChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  var result = [];
+  for(var i = 0; i < s.length; i++)
+  {
+    var x = safeURLChars.indexOf(s.charAt(i));
+    if(x < 0)
+      throw "Wrong PonyHead URL - invalid character!";
+    result.push(x);
+  }
+  return result;
+}
+
+function BitstreamDecoder64(data)
+{
+  this.encodedStream = data;
+  this.nextChunkOffset = 0;
+  this.currentChunk = 0;
+  this.bitsLeftInCurrentChunk = 0;
+}
+BitstreamDecoder64.prototype.popBits = function(n)
+{
+  var result = 0;
+  for(var i = 0; i < n; i++) {
+    if(this.bitsLeftInCurrentChunk == 0) {
+      if(this.nextChunkOffset >= this.encodedStream.length)
+        throw "Wrong PonyHead URL - not enough data!";
+      this.currentChunk = this.encodedStream[this.nextChunkOffset++];
+      this.bitsLeftInCurrentChunk = 6;
+    }
+    result += (this.currentChunk % 2) << i;
+    this.currentChunk >>= 1;
+    this.bitsLeftInCurrentChunk--;
+  }
+  return result;
+};
+BitstreamDecoder64.prototype.popGolomb = function(k)
+{
+  var n = 0;
+  while(this.popBits(1) == 0)
+    n++;
+  var x = this.popBits(n);
+  var y = this.popBits(k);
+  return (x + (1 << n) - 1 << k) + y;
+};
+
+function decodeSlots(bits, draftMode)
+{
+  var n = bits.popGolomb(1) + 1;
+  var result = [];
+  var id = -1;
+  for(var i = 0; i < n; i++)
+  {
+    if(draftMode)
+    {
+      id += bits.popGolomb(i == 0 ? 5 : 4) + 1;
+      var count = bits.popGolomb(1) + 1;
+    }
+    else
+    {
+      var code = bits.popGolomb(i == 0 ? 6 : 5);
+      id += Math.floor(code / 3) + 1;
+      count = code % 3 + 1;
+    }
+    result.push({id: id, count: count});
+  }
+  return result;
+}
+
+function uncompressDecklist(compressedList)
+{
+  var knownSetNames = ["pr", "prPF", "cn", "cnf", "cnPF", "rr", "rrF", "cs", "csf", "csF", "cg", "cg0", "cgpf", "cgPF", "gf", "ad", "adn", "adpf", "eo", "hm", "hmn", "mt"];
+
+  var bits = new BitstreamDecoder64(urlToArray64(compressedList));
+  if(0 !== bits.popGolomb(1))
+    throw "Wrong PonyHead URL - unknown compression version!";
+  var draftMode = bits.popBits(1);
+
+  var knownSets = [];
+  var knownSetsCount = bits.popGolomb(3);
+  if(knownSetsCount > 0)
+  {
+    var setId = bits.popGolomb(4);
+    knownSets.push({setName: knownSetNames[setId], slots: decodeSlots(bits, draftMode)});
+    for(var i = 1, knownSetsCount; i < knownSetsCount; i++)
+    {
+      setId += bits.popGolomb(2) + 1;
+      knownSets.push({setName: knownSetNames[setId], slots: decodeSlots(bits, draftMode)});
+    }
+  }
+
+  var unknownSets = [];
+  var unknownSetsCount = bits.popGolomb(0);
+  var setNameLength = 1;
+  for(i = 0; i < unknownSetsCount; i++)
+  {
+    setNameLength += bits.popGolomb(0);
+    unknownSets.push({setNameLength: setNameLength, slots: decodeSlots(bits, draftMode)});
+  }
+  var offset = bits.nextChunkOffset;
+  unknownSets.forEach(function(set) {
+    var nextOffset = offset + set.setNameLength;
+    if(compressedList.length < nextOffset)
+      throw "Wrong PonyHead URL - not enough data!";
+    set.setName = compressedList.substring(offset, nextOffset);
+    offset = nextOffset;
+  });
+
+  var cards = [];
+  knownSets.concat(unknownSets).forEach(function(set) {
+    set.slots.forEach(function(card) {
+      cards.push({data: db.cards[set.setName + card.id], amount: card.count});
+    });
+  });
+
+  return cards;
+}
+
 function ponyHeadToCards(ponyhead_url)
 {
+  var i = ponyhead_url.indexOf('/d/');
+  if (i >= 0)
+    return uncompressDecklist(ponyhead_url.substring(i + 3));
   var urlre = /[-=]([a-z][a-z])(\w+)x(\d+)/g;
   var cards = [];
   do
