@@ -87,7 +87,7 @@ function generateOCTGN(cards)
 {
   var str = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n";
   str += "<deck game=\"65656467-b709-43b2-a5c6-80c2f216adf9\">\n";
-  var sections = { "Mane": "", "Friend": "", "Resource": "", "Event": "", "Troublemaker": "", "Problem": ""};
+  var sections = { "Mane": "", "Friend": "", "Resource": "", "Event": "", "Troublemaker": "", "Problem": "", "Sideboard": ""};
   var encodeXML = function(str)
   {
     return str.split("&").join("&amp;")
