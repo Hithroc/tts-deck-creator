@@ -192,7 +192,7 @@ function decodeSlots(bits, draftMode)
 
 function uncompressDecklist(compressedList)
 {
-  var knownSetNames = ["pr", "prPF", "cn", "cnf", "cnPF", "rr", "rrF", "cs", "csf", "csF", "cg", "cg0", "cgpf", "cgPF", "gf", "ad", "adn", "adpf", "eo", "hm", "hmn", "mt"];
+  var knownSetNames = ["pr", "prPF", "cn", "cnf", "cnPF", "rr", "rrF", "cs", "csf", "csF", "cg", "cg0", "cgpf", "cgPF", "gf", "ad", "adn", "adpf", "eo", "hm", "hmn", "mt", "de", "sb", "ff", "ll", "nd"];
 
   var bits = new BitstreamDecoder64(urlToArray64(compressedList));
   if(0 !== bits.popGolomb(1))
