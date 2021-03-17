@@ -16,7 +16,7 @@ stdenv.mkDerivation {
     cp $src ./convert_json.py
   '';
   buildPhase = ''
-    python convert_json.py $dbs -o data.js --output-compressed datatts.json $mappingsArgg
+    python convert_json.py $dbs -o data.js --output-compressed datatts.json $mappingsArg
     '';
   installPhase = ''
     mkdir $out
