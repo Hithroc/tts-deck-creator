@@ -4,9 +4,11 @@ import argparse
 
 def search_mapping(i):
     for pid,mapping in enumerate(mappings):
-        pid = pid+1
-        if i in mapping["cards"]:
-            return (pid, mapping["cards"].index(i))
+        stuff = mapping["cards"]
+        if "problems" in mapping:
+            stuff += mapping["problems"]
+        if i in stuff:
+            return (pid+1, stuff.index(i))
     print(f"Warning: no mapping found for {i}", file=sys.stderr)
     return (0, 0)
 
