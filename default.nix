@@ -1,7 +1,5 @@
-{ inputDbs ? [ ./db.json ], mappings ? ./stmap.json }:
-let
-  pkgs = import <nixpkgs> {};
-in with pkgs;
+{ inputDbs ? [ ./db.json ], mappings ? ./stmap.json, pkgs }:
+with pkgs;
 stdenv.mkDerivation {
   name = "deck-converter";
   src = ./convert_json.py;
